@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  --color-stream-base: #121212;
+  --color-stream-elevated: #1a1a1a;
+  --color-stream-highlight: #282828;
+  --color-stream-accent: #6c63ff;
+  
+  --font-sans: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-stream-base);
+  color: white;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
