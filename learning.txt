@@ -1,0 +1,14 @@
+All packages installed :
+-> npm i express mongoose  and npm i dotenv jsonwebtoken cookie-parser 
+-> npm i bcryptjs : specifically for hashing.
+-> npm install @imagekit/nodejs
+-> npm i multer
+
+Uses of the middleware :
+-> Used to read all the incoming data in a request.
+-> Also used to modify all the incoming data in a request.
+-> Also used to send the response.
+
+1.  .populate("var")  -> when used with the find() also  returns all the details of the var also.
+2.  .skip() and the .limit() functions are used for pagination along with the find().
+3.  
