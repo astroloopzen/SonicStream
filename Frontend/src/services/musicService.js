@@ -16,5 +16,13 @@ export const musicService = {
   playMusic: async (musicId) => {
     const response = await api.post(`/api/music/${musicId}/play`);
     return response.data;
+  },
+  getAlbumById: async (albumId) => {
+    const response = await api.get(`/api/music/playlists/${albumId}`);
+    return response.data;
+  },
+  getArtistById: async (artistId) => {
+    const response = await api.get(`/api/music/artists/${artistId}`);
+    return response.data;
   }
 };

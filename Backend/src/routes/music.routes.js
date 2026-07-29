@@ -20,5 +20,6 @@ router.get("/playlists/:playlistId", authMiddleware.optionalAuthenticate, musicC
 // Append these to src/routes/music.routes.js
 router.post("/:musicId/play", authMiddleware.optionalAuthenticate, musicController.playMusic);
 router.get("/trending", authMiddleware.optionalAuthenticate, musicController.getTrendingMusic);
+router.get("/artists/:artistId", authMiddleware.optionalAuthenticate, musicController.getArtistById);
 
 module.exports = router;

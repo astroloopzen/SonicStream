@@ -41,7 +41,7 @@ const Welcome = () => {
           onClick={handleGuest}
           className="text-gray-400 hover:text-white text-sm font-medium transition-colors"
         >
-          Continue as Guest
+          Explore as Guest
         </button>
       </div>
     </div>

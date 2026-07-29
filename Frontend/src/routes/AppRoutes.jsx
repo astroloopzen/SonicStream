@@ -12,6 +12,8 @@ import Profile from '../pages/Profile/Profile';
 import NotFound from '../pages/NotFound/NotFound';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import EntryRoute from '../components/auth/EntryRoute';
+import Album from '../pages/Album/Album';
+import Artist from '../pages/Artist/Artist';
 
 const AppRoutes = () => (
   <Routes>
@@ -28,6 +30,8 @@ const AppRoutes = () => (
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/playlist" element={<Playlist />} />
+        <Route path="/album/:albumId" element={<Album />} />
+        <Route path="/artist/:artistId" element={<Artist />} />
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

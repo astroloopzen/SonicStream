@@ -149,4 +149,29 @@ async function getTrendingMusic(req, res) {
 
 // Don't forget to include playMusic and getTrendingMusic in your module.exports!
 
-module.exports = { createMusic , createPlaylist , getAllMusics , getAllPlaylists , getPlaylistById , playMusic , getTrendingMusic };
+async function getArtistById(req, res) {
+    const artistId = req.params.artistId;
+
+    try {
+        const artist = await userModel.findOne({ _id: artistId, role: "artist" }).select("-password");
+        
+        if (!artist) {
+            return res.status(404).json({ message: "Artist not found" });
+        }
+
+        const songs = await musicModel.find({ artist: artistId }).populate("artist", "username email");
+        const albums = await playlistModel.find({ user: artistId }).populate("user", "username email");
+
+        res.status(200).json({
+            message: "Artist fetched successfully",
+            artist,
+            songs,
+            albums
+        });
+    } catch (err) {
+        console.error("Error fetching artist:", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+module.exports = { createMusic , createPlaylist , getAllMusics , getAllPlaylists , getPlaylistById , playMusic , getTrendingMusic, getArtistById };

@@ -1,7 +1,13 @@
+import { useNavigate } from 'react-router-dom';
+
 const ArtistCard = ({ artist }) => {
+  const navigate = useNavigate();
   if (!artist) return null;
   return (
-    <div className="flex flex-col items-center p-4 hover:bg-stream-highlight rounded-xl transition-colors cursor-pointer group">
+    <div 
+      className="flex flex-col items-center p-4 hover:bg-stream-highlight rounded-xl transition-colors cursor-pointer group"
+      onClick={() => navigate(`/artist/${artist._id}`)}
+    >
       <div className="w-32 h-32 bg-stream-elevated rounded-full mb-4 shadow-lg overflow-hidden relative flex items-center justify-center">
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-40 text-green-500 text-3xl shadow-sm rounded-full">
           ▶

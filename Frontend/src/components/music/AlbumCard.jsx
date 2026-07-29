@@ -1,7 +1,13 @@
+import { useNavigate } from 'react-router-dom';
+
 const AlbumCard = ({ playlist }) => {
+  const navigate = useNavigate();
   if (!playlist) return null;
   return (
-    <div className="bg-stream-elevated p-4 rounded-xl hover:bg-stream-highlight transition-colors cursor-pointer group">
+    <div 
+      className="bg-stream-elevated p-4 rounded-xl hover:bg-stream-highlight transition-colors cursor-pointer group"
+      onClick={() => navigate(`/album/${playlist._id}`)}
+    >
       <div className="w-full aspect-square bg-stream-highlight rounded-md mb-4 shadow-lg overflow-hidden relative">
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-40 text-green-500 text-4xl shadow-sm">
           ▶
