@@ -1,9 +1,11 @@
-import { createContext, useState, useEffect, useRef } from 'react';
+import { createContext, useState, useEffect, useRef, useContext } from 'react';
 import { musicService } from '../services/musicService';
+import { AuthContext } from './AuthContext';
 
 export const PlayerContext = createContext();
 
 export const PlayerProvider = ({ children }) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -13,6 +15,19 @@ export const PlayerProvider = ({ children }) => {
   const [isMuted, setIsMuted] = useState(false);
 
   const audioRef = useRef(new Audio());
+
+  // Clear player on logout
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+      setQueue([]);
+      setCurrentIndex(-1);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+    }
+  }, [isAuthenticated]);
   
   const currentSong = currentIndex >= 0 && currentIndex < queue.length ? queue[currentIndex] : null;
 

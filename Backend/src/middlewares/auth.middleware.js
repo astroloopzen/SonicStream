@@ -58,4 +58,20 @@ async function authenticate(req, res, next){
     }
 }
 
-module.exports = { authArtist , authenticate };
+async function optionalAuthenticate(req, res, next){
+    const token = req.cookies.token;
+    
+    if(!token){
+        return next();
+    }
+    try{
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        req.user = decoded;
+    }
+    catch(err){
+        // Do nothing on error, just continue as guest
+    }
+    next();
+}
+
+module.exports = { authArtist , authenticate, optionalAuthenticate };

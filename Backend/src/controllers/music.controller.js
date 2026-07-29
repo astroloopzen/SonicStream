@@ -69,8 +69,11 @@ async function getAllMusics(req,res){
 }
 
 async function getAllPlaylists(req,res){
-    // Fetches the playlist title and creator info only
-    const playlists = await playlistModel.find({ user: req.user.id }).select(" title user ").populate("user","username email");
+    // Fetches playlists. If req.user is present, maybe we could filter, but let's just return all playlists for 'Top Albums' on Home page.
+    let filter = {};
+    // If the original intention was to only show user's playlists, we'd do: if (req.user) filter = { user: req.user.id };
+    // But since Home page shows these as global albums, let's just return all of them.
+    const playlists = await playlistModel.find().select(" title user ").populate("user","username email");
 
     res.status(200).json({
         message : "All Playlists fetched successfully....!",
@@ -111,17 +114,20 @@ async function playMusic(req, res) {
     const musicId = req.params.musicId;
 
     // 1. Increment the play count of the song by 1
-    await musicModel.findByIdAndUpdate(musicId, { $inc: { playCount: 1 } });
-
-    // 2. Add the song to the user's recentlyPlayed array
-    // We use $pull first to remove it if it exists, then $push to put it at the top so there are no duplicates
-    await userModel.findByIdAndUpdate(req.user.id, {
-        $pull: { recentlyPlayed: musicId }
+    await musicModel.findByIdAndUpdate(musicId, {
+        $inc: { playCount: 1 } // Increment play count by 1
     });
     
-    await userModel.findByIdAndUpdate(req.user.id, {
-        $push: { recentlyPlayed: { $each: [musicId], $position: 0 } } // Inserts at the beginning of the array
-    });
+    if (req.user) {
+        // We use $pull first to remove it if it exists, then $push to put it at the top so there are no duplicates
+        await userModel.findByIdAndUpdate(req.user.id, {
+            $pull: { recentlyPlayed: musicId }
+        });
+        
+        await userModel.findByIdAndUpdate(req.user.id, {
+            $push: { recentlyPlayed: { $each: [musicId], $position: 0 } } // Inserts at the beginning of the array
+        });
+    }
 
     res.status(200).json({
         message: "Playback tracked successfully....!"

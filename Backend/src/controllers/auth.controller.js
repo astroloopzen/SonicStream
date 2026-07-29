@@ -131,5 +131,20 @@ async function getFavourites(req,res){
         favourites: userWithFavourites.favourites
     });
 }
+async function getCurrentUser(req, res) {
+    const user = await userModel.findById(req.user.id).select("-password");
+    if (!user) {
+        return res.status(401).json({ message: "User not found" });
+    }
+    res.status(200).json({
+        message: "Session restored successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role
+        }
+    });
+}
 
-module.exports = { registerUser, loginUser , logoutUser, likeMusic, unlikeMusic, getFavourites };
+module.exports = { registerUser, loginUser , logoutUser, likeMusic, unlikeMusic, getFavourites, getCurrentUser };

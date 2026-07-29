@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState, useRef } from 'react';
 import { PlayerContext } from '../../context/PlayerContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const formatTime = (time) => {
   if (isNaN(time)) return '0:00';
@@ -23,6 +24,8 @@ const Footer = () => {
     setVolume, 
     toggleMute 
   } = useContext(PlayerContext);
+
+  const { favorites, toggleFavorite, isAuthenticated } = useContext(AuthContext);
 
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [dragProgress, setDragProgress] = useState(0);
@@ -64,6 +67,8 @@ const Footer = () => {
     setVolume(percent);
   };
 
+  const isFavorite = currentSong && favorites && favorites.includes(currentSong._id);
+
   return (
     <footer className="h-24 bg-stream-elevated border-t border-stream-highlight flex items-center px-4 shrink-0 z-20 relative w-full justify-between">
       {/* 1. Song Info (Left) */}
@@ -73,7 +78,7 @@ const Footer = () => {
             <div className="w-14 h-14 bg-gray-800 rounded-md flex items-center justify-center text-2xl mr-4 flex-shrink-0 shadow-md">
               🎵
             </div>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden flex-1 max-w-[150px]">
               <h4 className="text-sm font-semibold text-white truncate hover:underline cursor-pointer">
                 {currentSong.title}
               </h4>
@@ -81,6 +86,14 @@ const Footer = () => {
                 {currentSong.artist?.username || 'Unknown Artist'}
               </p>
             </div>
+            {isAuthenticated && (
+              <button 
+                onClick={() => toggleFavorite(currentSong._id)}
+                className={`ml-4 text-xl hover:scale-110 transition-transform ${isFavorite ? 'text-green-500' : 'text-gray-400 hover:text-white'}`}
+              >
+                {isFavorite ? '♥' : '♡'}
+              </button>
+            )}
           </>
         ) : (
           <div className="text-xs text-gray-500">No song selected</div>

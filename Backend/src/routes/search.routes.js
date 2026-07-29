@@ -5,6 +5,6 @@ const authMiddleware = require("../middlewares/auth.middleware");
 const router = express.Router();
 
 // Global search protected endpoint
-router.get("/", authMiddleware.authenticate, searchController.searchGlobal);
+router.get("/", authMiddleware.optionalAuthenticate, searchController.searchGlobal);
 
 module.exports = router;

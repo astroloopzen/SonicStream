@@ -6,9 +6,9 @@ const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    await logout();
+    navigate('/welcome');
   };
 
   return (
@@ -39,7 +39,7 @@ const Navbar = () => {
               <FiUser className="text-lg" />
               <span className="hidden md:inline">{user?.name || 'Profile'}</span>
             </Link>
-            <button 
+            <button
               onClick={handleLogout}
               className="w-10 h-10 rounded-full bg-stream-elevated flex items-center justify-center text-gray-400 hover:text-white hover:bg-stream-highlight transition-colors"
               title="Logout"

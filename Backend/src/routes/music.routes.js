@@ -11,14 +11,14 @@ const router = express.Router();
 
 // Music upload remains restricted to artists
 router.post("/upload", authMiddleware.authArtist, upload.single("music"), musicController.createMusic);
-router.get("/", authMiddleware.authenticate, musicController.getAllMusics);
+router.get("/", authMiddleware.optionalAuthenticate, musicController.getAllMusics);
 
 // NEW PLAYLIST ROUTES (Accessible by both users and artists via authenticate)
 router.post("/playlist", authMiddleware.authenticate, musicController.createPlaylist);
-router.get("/playlists", authMiddleware.authenticate, musicController.getAllPlaylists);
-router.get("/playlists/:playlistId", authMiddleware.authenticate, musicController.getPlaylistById);
+router.get("/playlists", authMiddleware.optionalAuthenticate, musicController.getAllPlaylists);
+router.get("/playlists/:playlistId", authMiddleware.optionalAuthenticate, musicController.getPlaylistById);
 // Append these to src/routes/music.routes.js
-router.post("/:musicId/play", authMiddleware.authenticate, musicController.playMusic);
-router.get("/trending", authMiddleware.authenticate, musicController.getTrendingMusic);
+router.post("/:musicId/play", authMiddleware.optionalAuthenticate, musicController.playMusic);
+router.get("/trending", authMiddleware.optionalAuthenticate, musicController.getTrendingMusic);
 
 module.exports = router;

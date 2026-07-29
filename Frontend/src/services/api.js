@@ -5,28 +5,16 @@ const api = axios.create({
   withCredentials: true, // Crucial for HttpOnly cookies if your backend uses them
 });
 
-// Request Interceptor: Attach token if it exists in localStorage
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// Request Interceptor: No longer needed for localStorage tokens since we use HttpOnly cookies
+// Cookies are automatically sent because of withCredentials: true
 
 // Response Interceptor: Handle 401 Unauthorized globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      // Redirect to login if not already there to avoid looping
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      // Let the calling function (like AuthContext) handle the 401 state.
+      // We no longer force a hard redirect here, which would break Guest mode and Welcome routing.
     }
     return Promise.reject(error);
   }

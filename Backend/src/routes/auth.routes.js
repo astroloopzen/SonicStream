@@ -14,5 +14,6 @@ router.post("/logout",authControllers.logoutUser);
 router.post("/like",authmiddleware.authenticate, authControllers.likeMusic);
 router.post("/unlike",authmiddleware.authenticate, authControllers.unlikeMusic);
 router.get("/favourites",authmiddleware.authenticate, authControllers.getFavourites);
+router.get("/me", authmiddleware.authenticate, authControllers.getCurrentUser);
 
 module.exports = router;
