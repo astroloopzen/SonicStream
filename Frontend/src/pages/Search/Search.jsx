@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { PlayerContext } from '../../context/PlayerContext';
 import SearchBar from '../../components/music/SearchBar';
 import { searchService } from '../../services/searchService';
 import { musicService } from '../../services/musicService';
@@ -7,6 +8,7 @@ import AlbumCard from '../../components/music/AlbumCard';
 import ArtistCard from '../../components/music/ArtistCard';
 
 const Search = () => {
+  const { playSong } = useContext(PlayerContext);
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [results, setResults] = useState(null);
@@ -47,13 +49,16 @@ const Search = () => {
     fetchResults();
   }, [debouncedQuery]);
 
-  const handlePlaySong = async (song) => {
+  const handlePlaySong = async (song, queueToPlay) => {
     try {
-      await musicService.playMusic(song._id);
-      console.log("Playing:", song.title);
-      // NOTE: Context update logic for player state goes here when player is ready
+      if (typeof playSong === 'function') {
+        playSong(song, queueToPlay);
+      } else {
+        await musicService.playMusic(song._id);
+        console.log("Playing:", song.title);
+      }
     } catch (err) {
-      console.error("Error playing song:", err);
+      console.error("Error tracking playback:", err);
     }
   };
 
@@ -109,7 +114,7 @@ const Search = () => {
               <h2 className="text-2xl font-bold mb-6">Songs</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                 {results.songs.map(song => (
-                  <SongCard key={song._id} song={song} onPlay={handlePlaySong} />
+                  <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, results.songs)} />
                 ))}
               </div>
             </section>

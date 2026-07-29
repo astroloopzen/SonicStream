@@ -8,7 +8,7 @@ import ArtistCard from '../../components/music/ArtistCard';
 
 const Home = () => {
   const { user } = useContext(AuthContext);
-  const { currentSong } = useContext(PlayerContext);
+  const { currentSong, playSong } = useContext(PlayerContext);
   const [trending, setTrending] = useState([]);
   const [recent, setRecent] = useState([]);
   const [playlists, setPlaylists] = useState([]);
@@ -41,14 +41,15 @@ const Home = () => {
     fetchHomeData();
   }, []);
 
-  const handlePlaySong = async (song) => {
+  const handlePlaySong = async (song, queueToPlay) => {
     try {
-      // Track playback in backend
-      await musicService.playMusic(song._id);
-      // NOTE: Context update logic to play song would go here, 
-      // but PlayerContext currently only has currentSong and isPlaying state
-      // without setter methods exposed in the provided context code.
-      console.log("Playing:", song.title);
+      // playSong handles calling the backend API now inside the context
+      if (typeof playSong === 'function') {
+        playSong(song, queueToPlay);
+      } else {
+        await musicService.playMusic(song._id);
+        console.log("Playing:", song.title);
+      }
     } catch (err) {
       console.error("Error tracking playback:", err);
     }
@@ -104,7 +105,7 @@ const Home = () => {
         {trending.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {trending.map((song) => (
-              <SongCard key={song._id} song={song} onPlay={handlePlaySong} />
+              <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, trending)} />
             ))}
           </div>
         ) : (
@@ -124,7 +125,7 @@ const Home = () => {
         {recent.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {recent.map((song) => (
-              <SongCard key={song._id} song={song} onPlay={handlePlaySong} />
+              <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, recent)} />
             ))}
           </div>
         ) : (
