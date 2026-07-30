@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../layout/MainLayout';
 import AuthLayout from '../layout/AuthLayout';
 import Home from '../pages/Home/Home';
@@ -14,6 +14,12 @@ import ProtectedRoute from '../components/auth/ProtectedRoute';
 import EntryRoute from '../components/auth/EntryRoute';
 import Album from '../pages/Album/Album';
 import Artist from '../pages/Artist/Artist';
+import ArtistRoute from '../components/auth/ArtistRoute';
+import DashboardLayout from '../pages/Dashboard/DashboardLayout';
+import DashboardHome from '../pages/Dashboard/DashboardHome';
+import DashboardSongs from '../pages/Dashboard/Songs';
+import DashboardPlaylists from '../pages/Dashboard/Playlists';
+import DashboardUploadSong from '../pages/Dashboard/UploadSong';
 
 const AppRoutes = () => (
   <Routes>
@@ -32,6 +38,16 @@ const AppRoutes = () => (
         <Route path="/playlist" element={<Playlist />} />
         <Route path="/album/:albumId" element={<Album />} />
         <Route path="/artist/:artistId" element={<Artist />} />
+        
+        <Route path="/dashboard" element={<ArtistRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route index element={<Navigate to="home" replace />} />
+            <Route path="home" element={<DashboardHome />} />
+            <Route path="songs" element={<DashboardSongs />} />
+            <Route path="playlists" element={<DashboardPlaylists />} />
+            <Route path="upload" element={<DashboardUploadSong />} />
+          </Route>
+        </Route>
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

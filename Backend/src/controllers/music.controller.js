@@ -58,8 +58,7 @@ async function createPlaylist(req,res){
 async function getAllMusics(req,res){
     const musics = await musicModel
     .find()
-    .skip(1)//Just used to skip the given number of songs/ musics from the beginning and fetch the remaining songs.
-    .limit(2)
+    .sort({ _id: -1 }) // Get newest first
     .populate("artist","username email");
 
     res.status(200).json({
@@ -69,11 +68,7 @@ async function getAllMusics(req,res){
 }
 
 async function getAllPlaylists(req,res){
-    // Fetches playlists. If req.user is present, maybe we could filter, but let's just return all playlists for 'Top Albums' on Home page.
-    let filter = {};
-    // If the original intention was to only show user's playlists, we'd do: if (req.user) filter = { user: req.user.id };
-    // But since Home page shows these as global albums, let's just return all of them.
-    const playlists = await playlistModel.find().select(" title user ").populate("user","username email");
+    const playlists = await playlistModel.find().populate("user","username email");
 
     res.status(200).json({
         message : "All Playlists fetched successfully....!",
@@ -174,4 +169,112 @@ async function getArtistById(req, res) {
     }
 }
 
-module.exports = { createMusic , createPlaylist , getAllMusics , getAllPlaylists , getPlaylistById , playMusic , getTrendingMusic, getArtistById };
+async function updateMusic(req, res) {
+    const { title } = req.body;
+    try {
+        const music = await musicModel.findById(req.params.musicId);
+        if (!music) return res.status(404).json({ message: "Music not found" });
+        
+        if (music.artist.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You do not have permission to edit this song." });
+        }
+
+        music.title = title;
+        await music.save();
+        
+        await music.populate("artist", "username email");
+        res.status(200).json({ message: "Music updated successfully", music });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+async function deleteMusic(req, res) {
+    try {
+        const music = await musicModel.findById(req.params.musicId);
+        if (!music) return res.status(404).json({ message: "Music not found" });
+        
+        if (music.artist.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You do not have permission to delete this song." });
+        }
+
+        await musicModel.findByIdAndDelete(req.params.musicId);
+        
+        // Also remove from playlists
+        await playlistModel.updateMany(
+            { musics: req.params.musicId },
+            { $pull: { musics: req.params.musicId } }
+        );
+        res.status(200).json({ message: "Music deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+async function updatePlaylist(req, res) {
+    const { title, musics } = req.body;
+    try {
+        const playlist = await playlistModel.findById(req.params.playlistId);
+        if (!playlist) return res.status(404).json({ message: "Playlist not found" });
+
+        if (playlist.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You do not have permission to edit this playlist." });
+        }
+
+        playlist.title = title;
+        playlist.musics = musics;
+        await playlist.save();
+
+        await playlist.populate("user", "username email");
+        await playlist.populate({
+            path: "musics",
+            populate: { path: "artist", select: "username email" }
+        });
+        
+        res.status(200).json({ message: "Playlist updated successfully", playlist });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+async function deletePlaylist(req, res) {
+    try {
+        const playlist = await playlistModel.findById(req.params.playlistId);
+        if (!playlist) return res.status(404).json({ message: "Playlist not found" });
+
+        if (playlist.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You do not have permission to delete this playlist." });
+        }
+
+        await playlistModel.findByIdAndDelete(req.params.playlistId);
+        res.status(200).json({ message: "Playlist deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+async function getArtistStats(req, res) {
+    try {
+        const [totalSongs, totalPlaylists, recentSongs] = await Promise.all([
+            musicModel.countDocuments({ artist: req.user.id }),
+            playlistModel.countDocuments({ user: req.user.id }),
+            musicModel.find({ artist: req.user.id })
+                .sort({ _id: -1 }) // simple descending sort by creation
+                .limit(5)
+                .populate("artist", "username email")
+        ]);
+        res.status(200).json({
+            message: "Stats fetched successfully",
+            stats: { totalSongs, totalPlaylists, recentSongs }
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports = { 
+    createMusic, createPlaylist, getAllMusics, getAllPlaylists, 
+    getPlaylistById, playMusic, getTrendingMusic, getArtistById,
+    updateMusic, deleteMusic, updatePlaylist, deletePlaylist, 
+    getArtistStats 
+};

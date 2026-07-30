@@ -35,9 +35,14 @@ const Navbar = () => {
           </>
         ) : (
           <>
+            {user?.role === 'artist' && (
+              <Link to="/dashboard" className="text-white hover:text-black transition-colors bg-stream-elevated px-4 py-2 rounded-full hover:bg-stream-highlight font-medium border border-stream-border/20">
+                Dashboard
+              </Link>
+            )}
             <Link to="/profile" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors bg-stream-elevated px-4 py-2 rounded-full hover:bg-stream-highlight">
               <FiUser className="text-lg" />
-              <span className="hidden md:inline">{user?.name || 'Profile'}</span>
+              <span className="hidden md:inline">{user?.username || 'Profile'}</span>
             </Link>
             <button
               onClick={handleLogout}

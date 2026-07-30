@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 
-
-
 async function authArtist(req, res, next){
     const token = req.cookies.token;
     
@@ -27,7 +25,6 @@ async function authArtist(req, res, next){
                 message : err.message
             })
     }
-
 }
 
 async function authenticate(req, res, next){

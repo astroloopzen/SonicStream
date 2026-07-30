@@ -12,6 +12,7 @@ const Home = () => {
   const [trending, setTrending] = useState([]);
   const [recent, setRecent] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [showAllRecent, setShowAllRecent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -119,12 +120,17 @@ const Home = () => {
       <section className="mb-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-white hover:underline cursor-pointer">Recently Added</h2>
-          <span className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider">Show all</span>
+          <span 
+            onClick={() => setShowAllRecent(!showAllRecent)}
+            className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider"
+          >
+            {showAllRecent ? 'Show less' : 'Show all'}
+          </span>
         </div>
         
         {recent.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {recent.map((song) => (
+            {(showAllRecent ? recent : recent.slice(0, 6)).map((song) => (
               <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, recent)} />
             ))}
           </div>
