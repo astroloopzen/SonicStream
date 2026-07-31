@@ -40,8 +40,19 @@ const Navbar = () => {
                 Dashboard
               </Link>
             )}
-            <Link to="/profile" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors bg-stream-elevated px-4 py-2 rounded-full hover:bg-stream-highlight">
-              <FiUser className="text-lg" />
+            {user?.role === 'user' && (
+              <Link to="/my-playlists" className="text-white hover:text-black transition-colors bg-stream-elevated px-4 py-2 rounded-full hover:bg-stream-highlight font-medium border border-stream-border/20">
+                My Playlists
+              </Link>
+            )}
+            <Link to="/profile" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors bg-stream-elevated pr-4 pl-1 py-1 rounded-full hover:bg-stream-highlight">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" className="w-8 h-8 rounded-full object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-stream-card flex items-center justify-center">
+                  <FiUser className="text-lg" />
+                </div>
+              )}
               <span className="hidden md:inline">{user?.username || 'Profile'}</span>
             </Link>
             <button

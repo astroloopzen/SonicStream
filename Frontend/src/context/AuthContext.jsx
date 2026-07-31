@@ -88,6 +88,10 @@ export const AuthProvider = ({ children }) => {
     setFavorites([]);
   };
 
+  const updateUser = (newUserData) => {
+    setUser(newUserData);
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -99,7 +103,8 @@ export const AuthProvider = ({ children }) => {
       register,
       logout,
       toggleFavorite,
-      continueAsGuest
+      continueAsGuest,
+      updateUser
     }}>
       {children}
     </AuthContext.Provider>

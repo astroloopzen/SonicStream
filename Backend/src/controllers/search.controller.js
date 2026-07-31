@@ -16,16 +16,16 @@ async function searchGlobal(req, res) {
         // Promise.all runs all three database queries at the exact same time for speed
         const [songs, playlists, artists] = await Promise.all([
             // 1. Search songs matching the title explicitly with regex options
-            musicModel.find({ title: { $regex: query, $options: "i" } }).populate("artist", "username email"),
+            musicModel.find({ title: { $regex: query, $options: "i" } }).populate("artist", "username email profilePicture"),
 
             // 2. Search playlists matching the title explicitly with regex options
-            playlistModel.find({ title: { $regex: query, $options: "i" } }).populate("user", "username email"),
+            playlistModel.find({ title: { $regex: query, $options: "i" } }).populate("user", "username email profilePicture"),
 
             // 3. Search users whose username matches and role is 'artist'
             userModel.find({ 
                 username: { $regex: query, $options: "i" }, 
                 role: "artist" 
-            }).select("username email")
+            }).select("username email profilePicture")
         ]);
 
         res.status(200).json({

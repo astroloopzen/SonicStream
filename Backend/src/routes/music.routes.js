@@ -28,15 +28,19 @@ router.get("/artists/:artistId", optionalAuthenticate, getArtistById);
 // Routes requiring basic authentication
 router.post("/:musicId/play", authenticate, playMusic);
 
+// Routes requiring basic authentication for creation
+router.post("/playlist", authenticate, createPlaylist);
+
 // Routes requiring artist permissions
 router.post("/upload", authArtist, upload.single("music"), createMusic);
-router.post("/playlist", authArtist, createPlaylist);
 
 // Artist Dashboard endpoints
 router.put("/:musicId", authArtist, updateMusic);
 router.delete("/:musicId", authArtist, deleteMusic);
-router.put("/playlists/:playlistId", authArtist, updatePlaylist);
-router.delete("/playlists/:playlistId", authArtist, deletePlaylist);
 router.get("/artist/stats", authArtist, getArtistStats);
+
+// Playlist Management endpoints (both roles)
+router.put("/playlists/:playlistId", authenticate, updatePlaylist);
+router.delete("/playlists/:playlistId", authenticate, deletePlaylist);
 
 module.exports = router;

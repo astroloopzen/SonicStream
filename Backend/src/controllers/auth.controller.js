@@ -1,6 +1,7 @@
 const userModel= require ("../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { uploadFile } = require("../services/storage.service");
 
 
 async function registerUser(req,res){
@@ -41,7 +42,9 @@ async function registerUser(req,res){
             id: user._id,
             username: user.username,
             email: user.email,
-            role: user.role
+            role: user.role,
+            profilePicture: user.profilePicture,
+            createdAt: user.createdAt
         }
     })
 }
@@ -84,7 +87,9 @@ async function loginUser(req,res){
             id:user._id,
             username:user.username,
             email: user.email,
-            role: user.role
+            role: user.role,
+            profilePicture: user.profilePicture,
+            createdAt: user.createdAt
         }
     });
      
@@ -142,9 +147,78 @@ async function getCurrentUser(req, res) {
             id: user._id,
             username: user.username,
             email: user.email,
-            role: user.role
+            role: user.role,
+            profilePicture: user.profilePicture,
+            createdAt: user.createdAt
         }
     });
 }
 
-module.exports = { registerUser, loginUser , logoutUser, likeMusic, unlikeMusic, getFavourites, getCurrentUser };
+async function updateProfile(req, res) {
+    const { username, email } = req.body;
+    try {
+        // Check if another user has this username or email
+        const existingUser = await userModel.findOne({
+            $and: [
+                { _id: { $ne: req.user.id } },
+                { $or: [{ username }, { email }] }
+            ]
+        });
+
+        if (existingUser) {
+            return res.status(409).json({ message: "Username or email is already taken by another account." });
+        }
+
+        const user = await userModel.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.username = username || user.username;
+        user.email = email || user.email;
+
+        if (req.file) {
+            const result = await uploadFile(req.file.buffer.toString('base64'));
+            user.profilePicture = result.url;
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                profilePicture: user.profilePicture,
+                createdAt: user.createdAt
+            }
+        });
+    } catch (err) {
+        console.error("Profile update error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+async function updatePassword(req, res) {
+    const { currentPassword, newPassword } = req.body;
+    try {
+        const user = await userModel.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Incorrect current password." });
+        }
+
+        const hash = await bcrypt.hash(newPassword, 10);
+        user.password = hash;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (err) {
+        console.error("Password update error:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+module.exports = { registerUser, loginUser , logoutUser, likeMusic, unlikeMusic, getFavourites, getCurrentUser, updateProfile, updatePassword };

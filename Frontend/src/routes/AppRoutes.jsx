@@ -9,6 +9,8 @@ import Search from '../pages/Search/Search';
 import Favorites from '../pages/Favorites/Favorites';
 import Playlist from '../pages/Playlist/Playlist';
 import Profile from '../pages/Profile/Profile';
+import Settings from '../pages/Settings/Settings';
+import MyPlaylists from '../pages/MyPlaylists/MyPlaylists';
 import NotFound from '../pages/NotFound/NotFound';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import EntryRoute from '../components/auth/EntryRoute';
@@ -53,6 +55,8 @@ const AppRoutes = () => (
         <Route element={<ProtectedRoute />}>
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/my-playlists" element={<MyPlaylists />} />
         </Route>
         
         <Route path="*" element={<NotFound />} />

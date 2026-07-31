@@ -65,7 +65,11 @@ const Artist = () => {
       {/* Artist Header */}
       <div className="flex flex-col md:flex-row gap-8 mb-12 items-center md:items-end">
         <div className="w-52 h-52 bg-stream-elevated rounded-full shadow-2xl flex-shrink-0 flex items-center justify-center text-7xl text-gray-500 overflow-hidden border-4 border-stream-highlight">
-          👤
+          {artist.profilePicture ? (
+            <img src={artist.profilePicture} alt={artist.username} className="w-full h-full object-cover" />
+          ) : (
+            <span>👤</span>
+          )}
         </div>
         
         <div className="flex flex-col gap-3 text-center md:text-left">

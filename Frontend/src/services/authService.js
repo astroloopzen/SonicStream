@@ -38,5 +38,20 @@ export const authService = {
   logout: async () => {
     const response = await api.post('/api/auth/logout');
     return response.data;
+  },
+
+  updateProfile: async (formData) => {
+    // Requires formData because of profile picture
+    const response = await api.put('/api/auth/profile', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  updatePassword: async (data) => {
+    const response = await api.put('/api/auth/password', data);
+    return response.data;
   }
 };
