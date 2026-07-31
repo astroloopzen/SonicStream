@@ -112,45 +112,45 @@ const DashboardPlaylists = () => {
       {playlists.length === 0 ? (
         <EmptyState icon={ListMusic} title="No Playlists Found" description="You haven't created any playlists yet." />
       ) : (
-        <div className="bg-stream-card rounded-lg overflow-hidden border border-stream-border/5 shadow-sm">
+        <div className="bg-stream-elevated/50 backdrop-blur-md rounded-2xl overflow-hidden border border-stream-border/10 shadow-xl">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-stream-border/10 bg-stream-elevated text-stream-text-secondary text-sm">
-                <th className="p-4 font-medium">Title</th>
-                <th className="p-4 font-medium">Tracks Count</th>
-                <th className="p-4 font-medium text-right">Actions</th>
+              <tr className="border-b border-stream-border/10 bg-stream-card text-gray-400 text-sm">
+                <th className="p-5 font-medium uppercase tracking-wider">Title</th>
+                <th className="p-5 font-medium uppercase tracking-wider">Tracks</th>
+                <th className="p-5 font-medium text-right uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
               {playlists.map((playlist) => (
-                <tr key={playlist._id} className="border-b border-stream-border/5 hover:bg-stream-elevated/50 transition-colors">
-                  <td className="p-4 font-medium">
+                <tr key={playlist._id} className="border-b border-stream-border/5 hover:bg-stream-highlight/30 transition-colors group">
+                  <td className="p-5 font-medium">
                     <span 
                       onClick={() => navigate(`/album/${playlist._id}`)}
-                      className="hover:underline hover:text-green-400 cursor-pointer"
+                      className="hover:underline hover:text-stream-accent cursor-pointer text-lg text-white"
                     >
                       {playlist.title}
                     </span>
                   </td>
-                  <td className="p-4 text-stream-text-secondary">{playlist.musics?.length || 0}</td>
-                  <td className="p-4 text-right space-x-2">
+                  <td className="p-5 text-gray-400 font-medium">{playlist.musics?.length || 0} songs</td>
+                  <td className="p-5 text-right space-x-3">
                     <button 
                       onClick={() => navigate(`/album/${playlist._id}`)}
-                      className="p-2 text-stream-text-secondary hover:text-green-400 transition-colors"
+                      className="p-2 bg-stream-card/50 rounded-full text-gray-400 hover:text-stream-accent hover:bg-stream-accent/10 transition-all opacity-0 group-hover:opacity-100"
                       title="Play / View"
                     >
                       <Play size={18} />
                     </button>
                     <button 
                       onClick={() => setEditingPlaylist(playlist)}
-                      className="p-2 text-stream-text-secondary hover:text-white transition-colors"
+                      className="p-2 bg-stream-card/50 rounded-full text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all opacity-0 group-hover:opacity-100"
                       title="Edit"
                     >
                       <Edit2 size={18} />
                     </button>
                     <button 
                       onClick={() => handleDelete(playlist._id)}
-                      className="p-2 text-stream-text-secondary hover:text-red-500 transition-colors"
+                      className="p-2 bg-stream-card/50 rounded-full text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
                       title="Delete"
                     >
                       <Trash2 size={18} />

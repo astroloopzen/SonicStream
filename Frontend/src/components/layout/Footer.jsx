@@ -31,13 +31,20 @@ const Footer = () => {
   const [dragProgress, setDragProgress] = useState(0);
   const isDragging = useRef(false);
 
+  const [isVolDraggingState, setIsVolDraggingState] = useState(false);
+  const [volDragProgress, setVolDragProgress] = useState(0);
+  const isVolDragging = useRef(false);
+
   const displayTime = isDraggingState ? dragProgress : currentTime;
   const progressPercent = duration > 0 ? (displayTime / duration) * 100 : 0;
-  const volumePercent = isMuted ? 0 : volume * 100;
+  
+  const displayVolume = isVolDraggingState ? volDragProgress : volume;
+  const volumePercent = isMuted ? 0 : displayVolume * 100;
 
   const handleSeekStart = (e) => {
     isDragging.current = true;
     setIsDraggingState(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
     const rect = e.currentTarget.getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     setDragProgress(percent * duration);
@@ -52,6 +59,7 @@ const Footer = () => {
 
   const handleSeekEnd = (e) => {
     if (isDragging.current) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
       const rect = e.currentTarget.getBoundingClientRect();
       const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
       const targetTime = percent * duration;
@@ -61,42 +69,66 @@ const Footer = () => {
     }
   };
 
-  const handleVolumeChange = (e) => {
+  const handleVolumeStart = (e) => {
+    isVolDragging.current = true;
+    setIsVolDraggingState(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+    
     const rect = e.currentTarget.getBoundingClientRect();
     const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    setVolDragProgress(percent);
     setVolume(percent);
+  };
+  
+  const handleVolumeMove = (e) => {
+    if (!isVolDragging.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    setVolDragProgress(percent);
+    setVolume(percent);
+  };
+
+  const handleVolumeEnd = (e) => {
+    if (isVolDragging.current) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+      const rect = e.currentTarget.getBoundingClientRect();
+      const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      setVolume(percent);
+      isVolDragging.current = false;
+      setIsVolDraggingState(false);
+    }
   };
 
   const isFavorite = currentSong && favorites && favorites.includes(currentSong._id);
 
   return (
-    <footer className="h-24 bg-stream-elevated border-t border-stream-highlight flex items-center px-4 shrink-0 z-20 relative w-full justify-between">
+    <footer className="h-24 bg-stream-elevated/95 backdrop-blur-xl border-t border-white/5 flex items-center px-4 sm:px-6 lg:px-8 shrink-0 z-50 relative w-full justify-between shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
       {/* 1. Song Info (Left) */}
       <div className="w-1/3 flex items-center min-w-[180px]">
         {currentSong ? (
           <>
-            <div className="w-14 h-14 bg-gray-800 rounded-md flex items-center justify-center text-2xl mr-4 flex-shrink-0 shadow-md">
+            <div className="w-14 h-14 bg-gray-800 rounded-md flex items-center justify-center text-2xl mr-4 flex-shrink-0 shadow-md border border-white/10">
               🎵
             </div>
             <div className="overflow-hidden flex-1 max-w-[150px]">
-              <h4 className="text-sm font-semibold text-white truncate hover:underline cursor-pointer">
+              <h4 className="text-sm font-semibold text-white truncate hover:underline cursor-pointer transition-colors hover:text-stream-accent">
                 {currentSong.title}
               </h4>
-              <p className="text-xs text-gray-400 truncate hover:underline cursor-pointer">
+              <p className="text-xs text-gray-400 truncate hover:underline cursor-pointer transition-colors hover:text-white">
                 {currentSong.artist?.username || 'Unknown Artist'}
               </p>
             </div>
             {isAuthenticated && (
               <button 
                 onClick={() => toggleFavorite(currentSong._id)}
-                className={`ml-4 text-xl hover:scale-110 transition-transform ${isFavorite ? 'text-green-500' : 'text-gray-400 hover:text-white'}`}
+                className={`ml-4 text-xl hover:scale-110 active:scale-95 transition-transform ${isFavorite ? 'text-stream-accent' : 'text-gray-400 hover:text-white'}`}
               >
                 {isFavorite ? '♥' : '♡'}
               </button>
             )}
           </>
         ) : (
-          <div className="text-xs text-gray-500">No song selected</div>
+          <div className="text-xs text-gray-500 font-medium">No song selected</div>
         )}
       </div>
 
@@ -106,7 +138,7 @@ const Footer = () => {
           {/* Previous */}
           <button 
             onClick={playPrevious}
-            className={`text-gray-400 hover:text-white transition-colors ${!currentSong && 'opacity-50 cursor-not-allowed'}`}
+            className={`text-gray-400 hover:text-white hover:scale-110 active:scale-95 transition-all ${!currentSong && 'opacity-50 cursor-not-allowed hover:scale-100 hover:text-gray-400'}`}
             disabled={!currentSong}
           >
             <svg role="img" height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
@@ -117,7 +149,7 @@ const Footer = () => {
           {/* Play/Pause */}
           <button 
             onClick={togglePlay}
-            className={`w-8 h-8 flex items-center justify-center bg-white text-black rounded-full hover:scale-105 transition-transform ${!currentSong && 'opacity-50 cursor-not-allowed'}`}
+            className={`w-9 h-9 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 active:scale-95 transition-all shadow-sm ${!currentSong && 'opacity-50 cursor-not-allowed hover:scale-100'}`}
             disabled={!currentSong}
           >
             {isPlaying ? (
@@ -134,7 +166,7 @@ const Footer = () => {
           {/* Next */}
           <button 
             onClick={playNext}
-            className={`text-gray-400 hover:text-white transition-colors ${!currentSong && 'opacity-50 cursor-not-allowed'}`}
+            className={`text-gray-400 hover:text-white hover:scale-110 active:scale-95 transition-all ${!currentSong && 'opacity-50 cursor-not-allowed hover:scale-100 hover:text-gray-400'}`}
             disabled={!currentSong}
           >
             <svg role="img" height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
@@ -148,21 +180,14 @@ const Footer = () => {
           <span className="min-w-[40px] text-right">{formatTime(displayTime)}</span>
           <div 
             className="flex-1 h-3 flex items-center group cursor-pointer"
-            onMouseDown={handleSeekStart}
-            onMouseMove={handleSeek}
-            onMouseUp={handleSeekEnd}
-            onMouseLeave={handleSeekEnd}
-            onClick={(e) => {
-              if(!isDragging.current) {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-                seek(percent * duration);
-              }
-            }}
+            onPointerDown={handleSeekStart}
+            onPointerMove={handleSeek}
+            onPointerUp={handleSeekEnd}
+            onPointerCancel={handleSeekEnd}
           >
-            <div className="w-full h-1 bg-gray-600 rounded-full relative overflow-hidden group-hover:h-1.5 transition-all">
+            <div className="w-full h-1.5 bg-gray-600/50 rounded-full relative overflow-hidden group-hover:h-2 transition-all">
               <div 
-                className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full"
+                className="absolute top-0 left-0 h-full bg-white group-hover:bg-stream-accent rounded-full transition-colors"
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
@@ -186,11 +211,14 @@ const Footer = () => {
           
           <div 
             className="flex-1 h-3 flex items-center group cursor-pointer"
-            onClick={handleVolumeChange}
+            onPointerDown={handleVolumeStart}
+            onPointerMove={handleVolumeMove}
+            onPointerUp={handleVolumeEnd}
+            onPointerCancel={handleVolumeEnd}
           >
-            <div className="w-full h-1 bg-gray-600 rounded-full relative overflow-hidden group-hover:h-1.5 transition-all">
+            <div className="w-full h-1.5 bg-gray-600/50 rounded-full relative overflow-hidden group-hover:h-2 transition-all">
               <div 
-                className="absolute top-0 left-0 h-full bg-white group-hover:bg-green-500 rounded-full"
+                className="absolute top-0 left-0 h-full bg-white group-hover:bg-stream-accent rounded-full transition-colors"
                 style={{ width: `${volumePercent}%` }}
               ></div>
             </div>

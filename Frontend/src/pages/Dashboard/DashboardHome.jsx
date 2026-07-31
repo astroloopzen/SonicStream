@@ -6,14 +6,14 @@ import EmptyState from '../../components/common/EmptyState';
 import { useAuth } from '../../hooks/useAuth';
 
 const StatCard = ({ title, value, icon: Icon, color }) => (
-  <div className="bg-stream-card p-6 rounded-lg border border-stream-border/5 shadow-sm hover:border-stream-highlight/50 transition-colors">
+  <div className="bg-stream-elevated/50 backdrop-blur-md p-6 rounded-2xl border border-stream-border/10 shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-stream-accent/50 transition-all duration-300">
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-stream-text-secondary text-sm font-medium mb-1">{title}</p>
-        <h3 className="text-3xl font-bold text-white">{value}</h3>
+        <p className="text-stream-text-secondary text-sm font-medium mb-2 uppercase tracking-wider">{title}</p>
+        <h3 className="text-4xl font-black text-white">{value}</h3>
       </div>
-      <div className={`p-4 rounded-full ${color} bg-opacity-10 text-white bg-stream-highlight`}>
-        <Icon size={24} />
+      <div className={`p-4 rounded-full ${color} bg-opacity-20 text-stream-accent bg-stream-highlight`}>
+        <Icon size={28} />
       </div>
     </div>
   </div>

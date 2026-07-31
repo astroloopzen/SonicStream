@@ -15,3 +15,31 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: var(--color-stream-accent);
+  color: white;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-stream-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-stream-highlight);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3e3e3e;
+}

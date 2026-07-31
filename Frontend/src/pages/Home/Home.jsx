@@ -12,6 +12,7 @@ const Home = () => {
   const [trending, setTrending] = useState([]);
   const [recent, setRecent] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [showAllTrending, setShowAllTrending] = useState(false);
   const [showAllRecent, setShowAllRecent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -87,42 +88,47 @@ const Home = () => {
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-32 pt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* 1. Hero Section */}
-      <section className="mb-10 pt-6">
-        <h1 className="text-4xl font-bold mb-2">
-          {getGreeting()}, {user?.username || 'Guest'}
+      <section className="mb-14">
+        <h1 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight text-white">
+          {getGreeting()}, <span className="text-stream-accent">{user?.username || 'Guest'}</span>
         </h1>
-        <p className="text-gray-400">Welcome to SonicStream. Discover your next favorite track.</p>
+        <p className="text-gray-400 text-lg">Welcome to SonicStream. Discover your next favorite track.</p>
       </section>
 
       {/* 2. Trending Songs */}
-      <section className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white hover:underline cursor-pointer">Trending Now</h2>
-          <span className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider">Show all</span>
+      <section className="mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white hover:text-stream-accent transition-colors cursor-pointer">Trending Now</h2>
+          <span 
+            onClick={() => setShowAllTrending(!showAllTrending)}
+            className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider transition-colors"
+          >
+            {showAllTrending ? 'Show less' : 'Show all'}
+          </span>
         </div>
         
         {trending.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {trending.map((song) => (
+            {(showAllTrending ? trending : trending.slice(0, 6)).map((song) => (
               <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, trending)} />
             ))}
           </div>
         ) : (
-          <div className="text-gray-400 py-8 bg-stream-elevated rounded-xl text-center">
+          <div className="text-gray-400 py-12 bg-stream-elevated/50 rounded-2xl text-center border border-stream-border/10">
             No trending songs available at the moment.
           </div>
         )}
       </section>
 
       {/* 3. Recently Added Songs */}
-      <section className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white hover:underline cursor-pointer">Recently Added</h2>
+      <section className="mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white hover:text-stream-accent transition-colors cursor-pointer">Recently Added</h2>
           <span 
             onClick={() => setShowAllRecent(!showAllRecent)}
-            className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider"
+            className="text-sm font-semibold text-gray-400 hover:text-white cursor-pointer uppercase tracking-wider transition-colors"
           >
             {showAllRecent ? 'Show less' : 'Show all'}
           </span>
@@ -135,16 +141,16 @@ const Home = () => {
             ))}
           </div>
         ) : (
-          <div className="text-gray-400 py-8 bg-stream-elevated rounded-xl text-center">
+          <div className="text-gray-400 py-12 bg-stream-elevated/50 rounded-2xl text-center border border-stream-border/10">
             No recently added songs found.
           </div>
         )}
       </section>
 
       {/* 4. Albums / Playlists */}
-      <section className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white hover:underline cursor-pointer">Popular Playlists & Albums</h2>
+      <section className="mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white hover:text-stream-accent transition-colors cursor-pointer">Popular Playlists & Albums</h2>
         </div>
         
         {playlists.length > 0 ? (
@@ -154,7 +160,7 @@ const Home = () => {
             ))}
           </div>
         ) : (
-          <div className="text-gray-400 py-8 bg-stream-elevated rounded-xl text-center">
+          <div className="text-gray-400 py-12 bg-stream-elevated/50 rounded-2xl text-center border border-stream-border/10">
             No albums or playlists available. Create one to see it here!
           </div>
         )}
@@ -162,15 +168,15 @@ const Home = () => {
 
       {/* 5. Popular Artists (Backend limitation placeholder) */}
       <section className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white hover:underline cursor-pointer">Popular Artists</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white hover:text-stream-accent transition-colors cursor-pointer">Popular Artists</h2>
         </div>
         
-        <div className="text-gray-400 p-6 bg-stream-elevated rounded-xl text-center border border-gray-700">
-          <h3 className="font-semibold text-white mb-2">Artist discovery coming soon!</h3>
-          <p className="text-sm">
+        <div className="text-gray-400 p-8 bg-stream-elevated/30 rounded-2xl text-center border border-dashed border-gray-700">
+          <h3 className="font-semibold text-white mb-3 text-lg">Artist discovery coming soon!</h3>
+          <p className="text-sm max-w-2xl mx-auto leading-relaxed">
             Currently, our backend API does not support fetching standalone artist profiles or a popular artists list. 
-            This section will be populated once the <code className="bg-gray-800 px-1 rounded">/api/artists/popular</code> endpoint is implemented.
+            This section will be populated once the <code className="bg-gray-800/80 px-2 py-1 rounded text-gray-300 mx-1">/api/artists/popular</code> endpoint is implemented.
           </p>
         </div>
       </section>

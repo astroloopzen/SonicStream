@@ -61,31 +61,30 @@ const Artist = () => {
   }
 
   return (
-    <div className="pb-24 pt-6 px-4 max-w-7xl mx-auto">
+    <div className="pb-32 pt-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Artist Header */}
-      <div className="flex flex-col md:flex-row gap-8 mb-12 items-center md:items-end">
-        <div className="w-52 h-52 bg-stream-elevated rounded-full shadow-2xl flex-shrink-0 flex items-center justify-center text-7xl text-gray-500 overflow-hidden border-4 border-stream-highlight">
+      <div className="flex flex-col md:flex-row gap-8 mb-16 pb-8 border-b border-stream-border/10 items-center md:items-end">
+        <div className="w-48 h-48 sm:w-56 sm:h-56 bg-stream-elevated/50 rounded-full shadow-2xl flex-shrink-0 flex items-center justify-center text-7xl text-gray-500 overflow-hidden border-4 border-stream-accent/20 shadow-stream-accent/10 relative">
           {artist.profilePicture ? (
             <img src={artist.profilePicture} alt={artist.username} className="w-full h-full object-cover" />
           ) : (
             <span>👤</span>
           )}
         </div>
-        
-        <div className="flex flex-col gap-3 text-center md:text-left">
-          <p className="text-sm font-semibold uppercase tracking-wider text-gray-400">Artist</p>
-          <h1 className="text-4xl md:text-7xl font-bold text-white">{artist.username}</h1>
-          <div className="flex items-center justify-center md:justify-start gap-4 text-gray-300 mt-2">
+        <div className="flex flex-col gap-3 text-center md:text-left flex-1">
+          <p className="text-sm font-bold uppercase tracking-widest text-stream-accent">Artist</p>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter">{artist.username}</h1>
+          <div className="flex items-center justify-center md:justify-start gap-4 text-gray-300 font-medium bg-stream-elevated/30 w-fit md:mx-0 mx-auto py-2 px-4 rounded-full border border-stream-border/5">
             <span>{albums.length} Albums</span>
-            <span className="text-gray-500">•</span>
+            <span className="text-stream-accent">•</span>
             <span>{songs.length} Songs</span>
           </div>
         </div>
       </div>
 
       {/* Albums Section */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 border-b border-gray-800 pb-2">Albums</h2>
+      <div className="mb-16">
+        <h2 className="text-2xl font-bold mb-6 text-white">Albums</h2>
         {albums.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {albums.map(album => (
@@ -98,8 +97,8 @@ const Artist = () => {
       </div>
 
       {/* Songs Section */}
-      <div>
-        <h2 className="text-2xl font-bold mb-6 border-b border-gray-800 pb-2">Top Songs</h2>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold mb-6 text-white">Top Songs</h2>
         {songs.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {songs.map(song => (

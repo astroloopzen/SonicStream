@@ -93,30 +93,34 @@ const Settings = () => {
         <div className="w-full md:w-64 shrink-0 space-y-2">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium ${
-              activeTab === 'profile' ? 'bg-stream-highlight text-black' : 'bg-stream-elevated text-gray-300 hover:text-white hover:bg-stream-card'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === 'profile' 
+                ? 'bg-stream-accent text-white shadow-lg shadow-stream-accent/20 translate-x-1' 
+                : 'text-gray-400 hover:text-white hover:bg-stream-highlight/50 hover:translate-x-1'
             }`}
           >
             <FiUser className="text-lg" /> Update Profile
           </button>
           <button
             onClick={() => setActiveTab('password')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium ${
-              activeTab === 'password' ? 'bg-stream-highlight text-black' : 'bg-stream-elevated text-gray-300 hover:text-white hover:bg-stream-card'
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === 'password' 
+                ? 'bg-stream-accent text-white shadow-lg shadow-stream-accent/20 translate-x-1' 
+                : 'text-gray-400 hover:text-white hover:bg-stream-highlight/50 hover:translate-x-1'
             }`}
           >
             <FiLock className="text-lg" /> Change Password
           </button>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium bg-stream-elevated text-red-400 hover:bg-red-500/10 hover:text-red-300"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-300 text-red-400 hover:text-red-300 hover:bg-red-500/10 hover:translate-x-1"
           >
             <FiLogOut className="text-lg" /> Logout
           </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 bg-stream-elevated rounded-xl p-6 border border-stream-border/10 shadow-lg">
+        <div className="flex-1 bg-stream-elevated/50 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-stream-border/10 shadow-xl">
           {error && <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg">{error}</div>}
           {success && <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 text-green-400 rounded-lg">{success}</div>}
 
@@ -146,24 +150,24 @@ const Settings = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-stream-card border border-stream-border/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-stream-highlight transition-colors"
-                  required
-                />
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full bg-stream-base/50 border border-stream-border/20 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-stream-accent focus:ring-2 focus:ring-stream-accent/20 transition-all shadow-inner"
+                    required
+                  />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-stream-card border border-stream-border/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-stream-highlight transition-colors"
-                  required
-                />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-stream-base/50 border border-stream-border/20 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-stream-accent focus:ring-2 focus:ring-stream-accent/20 transition-all shadow-inner"
+                    required
+                  />
               </div>
 
               <div className="pt-4">
@@ -180,37 +184,37 @@ const Settings = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full bg-stream-card border border-stream-border/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-stream-highlight transition-colors"
-                  required
-                />
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full bg-stream-base/50 border border-stream-border/20 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-stream-accent focus:ring-2 focus:ring-stream-accent/20 transition-all shadow-inner"
+                    required
+                  />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">New Password</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full bg-stream-card border border-stream-border/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-stream-highlight transition-colors"
-                  minLength={6}
-                  required
-                />
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full bg-stream-base/50 border border-stream-border/20 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-stream-accent focus:ring-2 focus:ring-stream-accent/20 transition-all shadow-inner"
+                    minLength={6}
+                    required
+                  />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Confirm New Password</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-stream-card border border-stream-border/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-stream-highlight transition-colors"
-                  minLength={6}
-                  required
-                />
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full bg-stream-base/50 border border-stream-border/20 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-stream-accent focus:ring-2 focus:ring-stream-accent/20 transition-all shadow-inner"
+                    minLength={6}
+                    required
+                  />
               </div>
 
               <div className="pt-4">

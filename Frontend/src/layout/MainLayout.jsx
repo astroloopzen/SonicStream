@@ -5,7 +5,7 @@ import Footer from '../components/layout/Footer';
 
 const MainLayout = () => (
   <div className="h-screen flex flex-col overflow-hidden bg-stream-base text-white">
-    <div className="flex flex-1 overflow-hidden">
+    <div className="flex flex-1 overflow-hidden relative">
       <Sidebar />
       <main className="flex-1 flex flex-col relative overflow-y-auto">
         <Navbar />

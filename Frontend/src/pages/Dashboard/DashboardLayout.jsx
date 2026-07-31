@@ -20,10 +20,10 @@ const DashboardLayout = () => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                   isActive
-                    ? 'bg-stream-highlight text-black font-medium'
-                    : 'text-stream-text-secondary hover:text-white hover:bg-stream-card'
+                    ? 'bg-stream-accent text-white shadow-lg shadow-stream-accent/20 translate-x-1'
+                    : 'text-gray-400 hover:text-white hover:bg-stream-highlight/50 hover:translate-x-1'
                 }`
               }
             >

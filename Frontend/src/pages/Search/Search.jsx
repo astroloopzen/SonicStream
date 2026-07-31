@@ -69,8 +69,8 @@ const Search = () => {
   );
 
   return (
-    <div className="pb-24 pt-6">
-      <div className="mb-8">
+    <div className="pb-32 pt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mb-12">
         <SearchBar 
           value={query} 
           onChange={setQuery} 
@@ -79,10 +79,10 @@ const Search = () => {
       </div>
 
       {!debouncedQuery.trim() && (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-          <span className="text-4xl mb-4">🔍</span>
-          <p className="text-xl font-semibold text-white">Start typing to search</p>
-          <p className="mt-2">Find your favorite songs, artists, and playlists.</p>
+        <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400">
+          <span className="text-6xl mb-6">🔍</span>
+          <p className="text-2xl font-bold text-white mb-2">Start typing to search</p>
+          <p className="text-gray-400">Find your favorite songs, artists, and playlists.</p>
         </div>
       )}
 
@@ -93,25 +93,25 @@ const Search = () => {
       )}
 
       {error && (
-        <div className="p-4 bg-red-900 bg-opacity-20 border border-red-500 text-red-400 rounded-xl">
+        <div className="p-6 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-center font-medium max-w-2xl mx-auto mt-12">
           {error}
         </div>
       )}
 
       {!loading && !error && debouncedQuery.trim() && !hasResults && results && (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-          <span className="text-4xl mb-4">🤷‍♂️</span>
-          <p className="text-xl font-semibold text-white">No results found for "{debouncedQuery}"</p>
-          <p className="mt-2">Please make sure your words are spelled correctly or use less or different keywords.</p>
+        <div className="flex flex-col items-center justify-center h-[40vh] text-gray-400 bg-stream-elevated/30 rounded-3xl border border-stream-border/5 mt-8">
+          <span className="text-6xl mb-6 opacity-50">🤷‍♂️</span>
+          <p className="text-2xl font-bold text-white mb-2">No results found for "{debouncedQuery}"</p>
+          <p className="text-gray-400 max-w-md text-center">Please make sure your words are spelled correctly or use less or different keywords.</p>
         </div>
       )}
 
       {!loading && hasResults && (
-        <div className="space-y-12">
+        <div className="space-y-16">
           {/* Songs Section */}
           {results.songs && results.songs.length > 0 && (
             <section>
-              <h2 className="text-2xl font-bold mb-6">Songs</h2>
+              <h2 className="text-2xl font-bold mb-6 text-white">Songs</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                 {results.songs.map(song => (
                   <SongCard key={song._id} song={song} onPlay={(s) => handlePlaySong(s, results.songs)} />
@@ -123,7 +123,7 @@ const Search = () => {
           {/* Albums/Playlists Section */}
           {results.playlists && results.playlists.length > 0 && (
             <section>
-              <h2 className="text-2xl font-bold mb-6">Albums & Playlists</h2>
+              <h2 className="text-2xl font-bold mb-6 text-white">Albums & Playlists</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                 {results.playlists.map(playlist => (
                   <AlbumCard key={playlist._id} playlist={playlist} />
@@ -135,7 +135,7 @@ const Search = () => {
           {/* Artists Section */}
           {results.artists && results.artists.length > 0 && (
             <section>
-              <h2 className="text-2xl font-bold mb-6">Artists</h2>
+              <h2 className="text-2xl font-bold mb-6 text-white">Artists</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                 {results.artists.map(artist => (
                   <ArtistCard key={artist._id} artist={artist} />
